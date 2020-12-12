@@ -73,7 +73,7 @@ def addModel():
         print("Collection not ready")
         return False
     models = col.models
-    def_model = models.new(config["local"]["dictionaryNoteTypeName"])
+    def_model = models.new(config["local"]["dictionaryNoteTypeNames"][0])
     # Add fields:
     for fname in fields:
         fld = models.newField(fname)
@@ -91,7 +91,7 @@ def addModel():
 def maybeCreateTemplate():
     if not config["local"]["dictionaryEnabled"]:
         return
-    mid = mw.col.models.byName(config["local"]["dictionaryNoteTypeName"])
+    mid = mw.col.models.byName(config["local"]["dictionaryNoteTypeNames"][0])
     if not mid:
         addModel()
         mw.reset()

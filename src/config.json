@@ -2,7 +2,7 @@
     "generalConfirmEmpty": true,
     "generalHotkey": "Ctrl+Shift+D",
     "dictionaryEnabled": true,
-    "dictionaryNoteTypeName": "Dictionary Entry",
+    "dictionaryNoteTypeNames": ["Dictionary Entry", "Dictionary: HTML Attributes"],
     "dictionaryTermFieldName": "Term",
     "dictionaryDefinitionFieldName": "Definition",
     "snippetsEnabled": true,

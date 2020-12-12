@@ -6,7 +6,7 @@ Please note that the following settings do not sync and require a restart to app
 
 - `dictionaryEnabled` (true/false): Whether or not to enable results drawn from the dictionary note type. Default: `true`.
 - `dictionaryDefinitionFieldName` (string): Name of the dictionary definition field in the dictionary note type. Default: `"Definition"`.
-- `dictionaryNoteTypeName` (string): Name of the dictionary note type. Default: `"Dictionary Entry"`.
+- `dictionaryNoteTypeNames` (list): Names of the dictionary note types. Default: `["Dictionary Entry"]`.
 - `dictionaryTermFieldName` (string): Name of the dictionary term field in the dictionary note type. Default: `"Term"`.
 - `generalConfirmEmpty` (true/false): Whether or not to show tooltip when no results have been found. Default: `true`.
 - `generalHotkey` (string): Hotkey to invoke tooltip manually. Default: `"Ctrl+Shift+D"`.

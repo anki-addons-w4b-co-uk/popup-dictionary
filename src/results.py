@@ -79,17 +79,15 @@ def getContentFor(term, ignore_nid):
     Returns HTML string."""
     conf = config["local"]
 
-    dict_entry = None
     note_content = None
+    note_ids = set()
     content = []
 
     if conf["dictionaryEnabled"]:
-        dict_entry = searchDefinitionFor(term)
-        if dict_entry:
-            content.append(dict_entry)
+        content.extend(search_dictionaries_for(term, note_ids))
 
     if conf["snippetsEnabled"]:
-        note_content = getNoteSnippetsFor(term, ignore_nid)
+        note_content = getNoteSnippetsFor(term, ignore_nid, note_ids)
 
         if note_content:
             content.extend(note_content)
@@ -103,7 +101,7 @@ def getContentFor(term, ignore_nid):
                 if conf["generalConfirmEmpty"] else "")
 
 
-def getNoteSnippetsFor(term, ignore_nid):
+def getNoteSnippetsFor(term, ignore_nid, note_ids):
     """Find relevant note snippets for search term.
     Returns list of HTML strings."""
     
@@ -140,6 +138,9 @@ def getNoteSnippetsFor(term, ignore_nid):
     note_content = []
     excluded_flds = conf["snippetsExcludedFields"]
     for nid in res:
+        if nid in note_ids:
+            continue
+        note_ids.add(nid)
         note = mw.col.getNote(nid)
         valid_flds = [html_field.format(
             i[1]) for i in note.items() if i[0] not in excluded_flds]
@@ -151,21 +152,24 @@ def getNoteSnippetsFor(term, ignore_nid):
     return note_content
 
 
-def searchDefinitionFor(term):
-    """Look up search term in dictionary deck.
-    Returns HTML string."""
+def search_dictionaries_for(term, note_ids) -> []:
+    result = []
     conf = config["local"]
-    query = u"""note:"{}" {}:"{}" """.format(conf["dictionaryNoteTypeName"],
-                                             conf["dictionaryTermFieldName"],
-                                             term)
-    res = mw.col.findNotes(query)
-    if res:
-        nid = res[0]
-        note = mw.col.getNote(nid)
-        try:
-            result = note[conf["dictionaryDefinitionFieldName"]]
-        except KeyError:
-            return None
-        return html_res_dict.format(nid, result)
+    dictionary_term_field = conf["dictionaryTermFieldName"]
+    dictionaries = conf["dictionaryNoteTypeNames"]
+    for dictionary in dictionaries:
+        query = u"""note:"{}" {}:"{}" """.format(dictionary,
+                                                 dictionary_term_field,
+                                                 term)
+        res = mw.col.findNotes(query)
+        if res:
+            nid = res[0]
+            note = mw.col.getNote(nid)
+            try:
+                definition = note[conf["dictionaryDefinitionFieldName"]]
+            except KeyError:
+                continue
+            note_ids.add(nid)
+            result.append(html_res_dict.format(nid, definition))
 
-    return None
+    return result
