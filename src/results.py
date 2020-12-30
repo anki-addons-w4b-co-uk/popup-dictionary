@@ -60,9 +60,17 @@ onclick='pycmd("dctBrws:" + this.parentNode.dataset.nid)'>&rarr;</div></div>\
 
 html_res_dict = """\
 <div class="tt-res tt-dict" data-nid={}>
-    <div class="tt-dict-title">Definition:</div>
+    <div class="tt-dict-title">{}:</div>
     {}
     <div title="Browse..." class="tt-brws" onclick='pycmd("dctBrws:" + this.parentNode.dataset.nid)'>&rarr;</div>
+</div>"""
+
+html_card_dict = """\
+<div class="tt-res tt-dict" data-cid=%(cid)d>
+    <div class="tt-dict-title">%(term)s:</div>
+    %(def)s
+    <div title="Preview Card..." class="tt-card" onclick='pycmd("dctCard:" + %(cid)d)'>open card</div>
+    <div title="Browse..." class="tt-brws" onclick='pycmd("dctBrws:" + %(nid)d)'>&rarr;</div>
 </div>"""
 
 html_field = """<div class="tt-fld">{}</div>"""
@@ -108,9 +116,11 @@ def getNoteSnippetsFor(term, ignore_nid, note_ids):
     conf = config["local"]
 
     logger.debug("getNoteSnippetsFor called")
+    exclusion_tokens = []
     # exclude current note
-    current_nid = mw.reviewer.card.note().id
-    exclusion_tokens = ["-nid:{}".format(current_nid)]
+    if mw and mw.reviewer and mw.reviewer.card:
+        current_nid = mw.reviewer.card.note().id
+        exclusion_tokens = ["-nid:{}".format(current_nid)]
 
     if ignore_nid:
         exclusion_tokens.append("-nid:{}".format(ignore_nid))
@@ -163,13 +173,20 @@ def search_dictionaries_for(term, note_ids) -> []:
                                                  term)
         res = mw.col.findNotes(query)
         if res:
+            cid = -1
             nid = res[0]
             note = mw.col.getNote(nid)
+            for card in note.cards():
+                if card.ord == 0:
+                    cid = card.id
             try:
                 definition = note[conf["dictionaryDefinitionFieldName"]]
             except KeyError:
                 continue
             note_ids.add(nid)
-            result.append(html_res_dict.format(nid, definition))
+            if cid != -1:
+                result.append(html_card_dict % {'cid': cid, 'term': term, 'def': definition, 'nid': nid})
+            else:
+                result.append(html_res_dict.format(nid, term, definition))
 
     return result

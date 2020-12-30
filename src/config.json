@@ -2,7 +2,13 @@
     "generalConfirmEmpty": true,
     "generalHotkey": "Ctrl+Shift+D",
     "dictionaryEnabled": true,
-    "dictionaryNoteTypeNames": ["Dictionary Entry", "Dictionary: HTML Attributes"],
+    "dictionaryNoteTypeNames": [
+        "Dictionary Entry",
+        "Dictionary: CSS Property Cards",
+        "Dictionary: HTML Attributes",
+        "Dictionary: HTML Elements",
+        "Dictionary: HTML Rel Attributes"
+    ],
     "dictionaryTermFieldName": "Term",
     "dictionaryDefinitionFieldName": "Definition",
     "snippetsEnabled": true,

@@ -38,6 +38,8 @@ import json
 import aqt
 from aqt.qt import *
 from aqt import mw
+from aqt.editor import Editor
+from aqt.previewer import Previewer
 from aqt.reviewer import Reviewer
 
 from anki.hooks import wrap, addHook
@@ -83,6 +85,11 @@ def onProfileLoaded():
     entirety"""
     Reviewer.revHtml = wrap(Reviewer.revHtml, onRevHtml, "around")
     Reviewer._linkHandler = wrap(Reviewer._linkHandler, linkHandler, "around")
+    # Previewer.revHtml = wrap(Previewer.revHtml, onRevHtml, "around")
+    Previewer._on_bridge_cmd = wrap(Previewer._on_bridge_cmd, linkHandler, "around")
+    # Editor.revHtml = wrap(Editor.revHtml, onRevHtml, "around")
+    Editor.onBridgeCmd = wrap(Editor.onBridgeCmd, linkHandler, "around")
+
 
 
 def onReviewerHotkey():
