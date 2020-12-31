@@ -5,6 +5,9 @@
     "dictionaryNoteTypeNames": [
         "Dictionary Entry",
         "Dictionary: CSS Property Cards",
+        "Dictionary: DOM Interfaces",
+        "Dictionary: DOM Mixins",
+        "Dictionary: Event Types",
         "Dictionary: HTML Attributes",
         "Dictionary: HTML Elements",
         "Dictionary: HTML Rel Attributes"
